@@ -17,7 +17,7 @@ def convpool(X, W, b):
     return tf.nn.relu(pool_out)
 
 
-def init_filter(shape, poolsz):
+def init_filter(shape):
     # w = np.random.randn(*shape) * np.sqrt(2) / np.sqrt(np.prod(shape[:-1]) + shape[-1]*np.prod(shape[:-2]) / np.prod(poolsz))
     w = np.random.randn(*shape) * np.sqrt(2.0 / np.prod(shape[:-1]))
     return w.astype(np.float32)
@@ -74,11 +74,11 @@ def main():
     poolsz = (2, 2)
 
     W1_shape = (5, 5, 3, 20) # (filter_width, filter_height, num_color_channels, num_feature_maps)
-    W1_init = init_filter(W1_shape, poolsz)
+    W1_init = init_filter(W1_shape)
     b1_init = np.zeros(W1_shape[-1], dtype=np.float32) # one bias per output feature map
 
     W2_shape = (5, 5, 20, 50) # (filter_width, filter_height, old_num_feature_maps, num_feature_maps)
-    W2_init = init_filter(W2_shape, poolsz)
+    W2_init = init_filter(W2_shape)
     b2_init = np.zeros(W2_shape[-1], dtype=np.float32)
 
     # vanilla ANN weights
