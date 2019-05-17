@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from sklearn.utils import shuffle
 
+from dataset import load_data
+
 
 def convpool(X, W, b):
     # just assume pool size is (2,2) because we need to augment it with 1s
