@@ -137,11 +137,8 @@ def main():
             testSucc = 0
             testAcc = 0
             for k in range(0,len(y_test) // batch_sz):
-                start = k * batch_sz
-                end = min((k + 1) * batch_sz, len(y_test))
-
-                Xbatch = X_test[start:end,]
-                Ybatch = y_test[start:end,]
+                Xbatch = X_test[k * batch_sz:(k + 1) * batch_sz,]
+                Ybatch = y_test[k * batch_sz:(k + 1) * batch_sz,]
 
                 prediction = session.run(predict_op, feed_dict={X: Xbatch, T: Ybatch})
                 testSucc += np.sum(prediction == np.argmax(Ybatch))
