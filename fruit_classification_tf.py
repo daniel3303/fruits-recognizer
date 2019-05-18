@@ -25,11 +25,11 @@ def init_filter(shape):
     return w.astype(np.float32)
 
 
-
 # Normalizes images 0 - 255 -> 0 - 1
 def normalize(X):
     # X of shape (N, W, H, 3)
     return (X / 255).astype(np.float32)
+
 
 
 def main():
@@ -41,9 +41,8 @@ def main():
     # Encode targets
     encoder = OneHotEncoder(sparse=True)
 
-    y_train = encoder.fit_transform(y_train.reshape(-1,1)).toarray()
-    y_test = encoder.transform(y_test.reshape(-1, 1))
-
+    y_train = encoder.fit_transform(y_train.reshape(-1, 1)).toarray()
+    y_test = encoder.transform(y_test.reshape(-1, 1)).toarray()
 
     # Need to scale! don't leave as 0..255
     # Also need indicator matrix for cost calculation
@@ -59,31 +58,29 @@ def main():
     batch_sz = 128
     n_batches = N // batch_sz
 
-
     # initial weights
     M = 256
     K = N_class
     poolsz = (2, 2)
 
-    W1_shape = (5, 5, 3, 20) # (filter_width, filter_height, num_color_channels, num_feature_maps)
+    W1_shape = (5, 5, 3, 20)  # (filter_width, filter_height, num_color_channels, num_feature_maps)
     W1_init = init_filter(W1_shape)
-    b1_init = np.zeros(W1_shape[-1], dtype=np.float32) # one bias per output feature map
+    b1_init = np.zeros(W1_shape[-1], dtype=np.float32)  # one bias per output feature map
 
-    W2_shape = (5, 5, 20, 50) # (filter_width, filter_height, old_num_feature_maps, num_feature_maps)
+    W2_shape = (5, 5, 20, 50)  # (filter_width, filter_height, old_num_feature_maps, num_feature_maps)
     W2_init = init_filter(W2_shape)
     b2_init = np.zeros(W2_shape[-1], dtype=np.float32)
 
     # vanilla ANN weights
-    W3_init = np.random.randn(W2_shape[-1]*25*25, M) / np.sqrt(W2_shape[-1]*25*25 + M)
+    W3_init = np.random.randn(W2_shape[-1] * 25 * 25, M) / np.sqrt(W2_shape[-1] * 25 * 25 + M)
     b3_init = np.zeros(M, dtype=np.float32)
     W4_init = np.random.randn(M, K) / np.sqrt(M + K)
     b4_init = np.zeros(K, dtype=np.float32)
 
-
     # define variables and expressions
     # using None as the first shape element takes up too much RAM unfortunately
-    X = tf.placeholder(tf.float32, shape=(batch_sz, img_width, img_height, 3), name='X')
-    T = tf.placeholder(tf.int32, shape=(batch_sz, N_class), name='T')
+    X = tf.placeholder(tf.float32, shape=(None, img_width, img_height, 3), name='X')
+    T = tf.placeholder(tf.int32, shape=(None, N_class), name='T')
     W1 = tf.Variable(W1_init.astype(np.float32))
     b1 = tf.Variable(b1_init.astype(np.float32))
     W2 = tf.Variable(W2_init.astype(np.float32))
@@ -96,8 +93,8 @@ def main():
     Z1 = convpool(X, W1, b1)
     Z2 = convpool(Z1, W2, b2)
     Z2_shape = Z2.get_shape().as_list()
-    Z2r = tf.reshape(Z2, [Z2_shape[0], np.prod(Z2_shape[1:])])
-    Z3 = tf.nn.relu( tf.matmul(Z2r, W3) + b3 )
+    Z2r = tf.reshape(Z2, [-1, np.prod(Z2_shape[1:])])
+    Z3 = tf.nn.relu(tf.matmul(Z2r, W3) + b3)
     Yish = tf.matmul(Z3, W4) + b4
 
     cost = tf.reduce_sum(
@@ -121,24 +118,44 @@ def main():
         session.run(init)
 
         error = []
+        accuracy = []
         for i in range(max_iter):
             epochErr = 0
+
             for j in range(n_batches):
-                Xbatch = X_train[j*batch_sz:(j*batch_sz + batch_sz),]
-                Ybatch = y_train[j*batch_sz:(j*batch_sz + batch_sz),]
+                print(
+                    "\rEpoch " + str(i + 1) + " of " + str(max_iter) + " | Training batch " + str(j + 1) + " of " + str(
+                        n_batches), end="")
 
-                if len(Xbatch) == batch_sz:
-                    session.run(train_op, feed_dict={X: Xbatch, T: Ybatch})
-                    epochErr += session.run(cost, feed_dict={X: Xbatch, T: Ybatch})
-                    print("Current batch error: "+str(epochErr))
+                Xbatch = X_train[j * batch_sz:(j * batch_sz + batch_sz), ]
+                Ybatch = y_train[j * batch_sz:(j * batch_sz + batch_sz), ]
+
+                session.run(train_op, feed_dict={X: Xbatch, T: Ybatch})
+                epochErr += session.run(cost, feed_dict={X: Xbatch, T: Ybatch})
+
+            # after one epoch calculates the accuracy
+            testSucc = 0
+            testAcc = 0
+            for k in range(0,len(y_test) // batch_sz):
+                start = k * batch_sz
+                end = min((k + 1) * batch_sz, len(y_test))
+
+                Xbatch = X_test[start:end,]
+                Ybatch = y_test[start:end,]
+
+                prediction = session.run(predict_op, feed_dict={X: Xbatch, T: Ybatch})
+                testSucc += np.sum(prediction == np.argmax(Ybatch))
+                testAcc = testSucc/len(y_test)
+
             error.append(epochErr)
-
+            accuracy.append(testAcc)
+            print(" | Epoch error: {0:.0f}".format(epochErr)+" | Accuracy: {0:.2f}".format(testAcc))
 
         W1_val = W1.eval()
         W2_val = W2.eval()
     print("Elapsed time:", (datetime.now() - t0))
-    #plt.plot(LL)
-    #plt.show()
+    # plt.plot(LL)
+    # plt.show()
     print(error)
 
 
