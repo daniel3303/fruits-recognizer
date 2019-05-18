@@ -3,12 +3,12 @@ from builtins import range
 
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
 
 from datetime import datetime
 from sklearn.utils import shuffle
+from sklearn.preprocessing import OneHotEncoder
 
-from dataset import load_data
+from dataset_util import load_data
 
 
 def convpool(X, W, b):
@@ -25,54 +25,44 @@ def init_filter(shape):
     return w.astype(np.float32)
 
 
-def rearrange(X):
-    # input is (32, 32, 3, N)
-    # output is (N, 32, 32, 3)
-    # N = X.shape[-1]
-    # out = np.zeros((N, 32, 32, 3), dtype=np.float32)
-    # for i in xrange(N):
-    #     for j in xrange(3):
-    #         out[i, :, :, j] = X[:, :, j, i]
-    # return out / 255
-    return (X.transpose(3, 0, 1, 2) / 255).astype(np.float32)
+
+# Normalizes images 0 - 255 -> 0 - 1
+def normalize(X):
+    # X of shape (N, W, H, 3)
+    return (X / 255).astype(np.float32)
 
 
 def main():
-    train, test = get_data()
+    X_train, y_train, X_test, y_test, N_class = load_data()
+    img_width = X_train.shape[1]
+    img_height = X_train.shape[1]
+    img_size = img_width * img_height
+
+    # Encode targets
+    encoder = OneHotEncoder(sparse=True)
+
+    y_train = encoder.fit_transform(y_train.reshape(-1,1)).toarray()
+    y_test = encoder.transform(y_test.reshape(-1, 1))
+
 
     # Need to scale! don't leave as 0..255
-    # Y is a N x 1 matrix with values 1..10 (MATLAB indexes by 1)
-    # So flatten it and make it 0..9
     # Also need indicator matrix for cost calculation
-    Xtrain = rearrange(train['X'])
-    Ytrain = train['y'].flatten() - 1
-    # print len(Ytrain)
-    del train
-    Xtrain, Ytrain = shuffle(Xtrain, Ytrain)
+    X_train = normalize(X_train)
+    X_train, y_train = shuffle(X_train, y_train)
 
-    Xtest  = rearrange(test['X'])
-    Ytest  = test['y'].flatten() - 1
-    del test
+    X_test = normalize(X_test)
 
     # gradient descent params
     max_iter = 6
     print_period = 10
-    N = Xtrain.shape[0]
-    batch_sz = 500
+    N = X_train.shape[0]
+    batch_sz = 128
     n_batches = N // batch_sz
 
-    # limit samples since input will always have to be same size
-    # you could also just do N = N / batch_sz * batch_sz
-    Xtrain = Xtrain[:73000,]
-    Ytrain = Ytrain[:73000]
-    Xtest = Xtest[:26000,]
-    Ytest = Ytest[:26000]
-    # print "Xtest.shape:", Xtest.shape
-    # print "Ytest.shape:", Ytest.shape
 
     # initial weights
-    M = 500
-    K = 10
+    M = 256
+    K = N_class
     poolsz = (2, 2)
 
     W1_shape = (5, 5, 3, 20) # (filter_width, filter_height, num_color_channels, num_feature_maps)
@@ -84,7 +74,7 @@ def main():
     b2_init = np.zeros(W2_shape[-1], dtype=np.float32)
 
     # vanilla ANN weights
-    W3_init = np.random.randn(W2_shape[-1]*8*8, M) / np.sqrt(W2_shape[-1]*8*8 + M)
+    W3_init = np.random.randn(W2_shape[-1]*25*25, M) / np.sqrt(W2_shape[-1]*25*25 + M)
     b3_init = np.zeros(M, dtype=np.float32)
     W4_init = np.random.randn(M, K) / np.sqrt(M + K)
     b4_init = np.zeros(K, dtype=np.float32)
@@ -92,8 +82,8 @@ def main():
 
     # define variables and expressions
     # using None as the first shape element takes up too much RAM unfortunately
-    X = tf.placeholder(tf.float32, shape=(batch_sz, 32, 32, 3), name='X')
-    T = tf.placeholder(tf.int32, shape=(batch_sz,), name='T')
+    X = tf.placeholder(tf.float32, shape=(batch_sz, img_width, img_height, 3), name='X')
+    T = tf.placeholder(tf.int32, shape=(batch_sz, N_class), name='T')
     W1 = tf.Variable(W1_init.astype(np.float32))
     b1 = tf.Variable(b1_init.astype(np.float32))
     W2 = tf.Variable(W2_init.astype(np.float32))
@@ -111,7 +101,7 @@ def main():
     Yish = tf.matmul(Z3, W4) + b4
 
     cost = tf.reduce_sum(
-        tf.nn.sparse_softmax_cross_entropy_with_logits(
+        tf.nn.softmax_cross_entropy_with_logits_v2(
             logits=Yish,
             labels=T
         )
@@ -130,72 +120,26 @@ def main():
     with tf.Session() as session:
         session.run(init)
 
+        error = []
         for i in range(max_iter):
+            epochErr = 0
             for j in range(n_batches):
-                Xbatch = Xtrain[j*batch_sz:(j*batch_sz + batch_sz),]
-                Ybatch = Ytrain[j*batch_sz:(j*batch_sz + batch_sz),]
+                Xbatch = X_train[j*batch_sz:(j*batch_sz + batch_sz),]
+                Ybatch = y_train[j*batch_sz:(j*batch_sz + batch_sz),]
 
                 if len(Xbatch) == batch_sz:
                     session.run(train_op, feed_dict={X: Xbatch, T: Ybatch})
-                    if j % print_period == 0:
-                        # due to RAM limitations we need to have a fixed size input
-                        # so as a result, we have this ugly total cost and prediction computation
-                        test_cost = 0
-                        prediction = np.zeros(len(Xtest))
-                        for k in range(len(Xtest) // batch_sz):
-                            Xtestbatch = Xtest[k*batch_sz:(k*batch_sz + batch_sz),]
-                            Ytestbatch = Ytest[k*batch_sz:(k*batch_sz + batch_sz),]
-                            test_cost += session.run(cost, feed_dict={X: Xtestbatch, T: Ytestbatch})
-                            prediction[k*batch_sz:(k*batch_sz + batch_sz)] = session.run(
-                                predict_op, feed_dict={X: Xtestbatch})
-                        err = error_rate(prediction, Ytest)
-                        print("Cost / err at iteration i=%d, j=%d: %.3f / %.3f" % (i, j, test_cost, err))
-                        LL.append(test_cost)
+                    epochErr += session.run(cost, feed_dict={X: Xbatch, T: Ybatch})
+                    print("Current batch error: "+str(epochErr))
+            error.append(epochErr)
+
 
         W1_val = W1.eval()
         W2_val = W2.eval()
     print("Elapsed time:", (datetime.now() - t0))
-    plt.plot(LL)
-    plt.show()
-
-
-    W1_val = W1_val.transpose(3, 2, 0, 1)
-    W2_val = W2_val.transpose(3, 2, 0, 1)
-
-
-    # visualize W1 (20, 3, 5, 5)
-    # W1_val = W1.get_value()
-    grid = np.zeros((8*5, 8*5))
-    m = 0
-    n = 0
-    for i in range(20):
-        for j in range(3):
-            filt = W1_val[i,j]
-            grid[m*5:(m+1)*5,n*5:(n+1)*5] = filt
-            m += 1
-            if m >= 8:
-                m = 0
-                n += 1
-    plt.imshow(grid, cmap='gray')
-    plt.title("W1")
-    plt.show()
-
-    # visualize W2 (50, 20, 5, 5)
-    # W2_val = W2.get_value()
-    grid = np.zeros((32*5, 32*5))
-    m = 0
-    n = 0
-    for i in range(50):
-        for j in range(20):
-            filt = W2_val[i,j]
-            grid[m*5:(m+1)*5,n*5:(n+1)*5] = filt
-            m += 1
-            if m >= 32:
-                m = 0
-                n += 1
-    plt.imshow(grid, cmap='gray')
-    plt.title("W2")
-    plt.show()
+    #plt.plot(LL)
+    #plt.show()
+    print(error)
 
 
 if __name__ == '__main__':

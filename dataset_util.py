@@ -1,3 +1,5 @@
+import numpy as np
+
 import cv2
 import os
 
@@ -37,4 +39,8 @@ def load_data():
             y_test.append(cn)
     print(str(len(y_test)) + " images found.")
 
-    return (X_train, y_train, X_test, y_test)
+    print("Classes found: ")
+    for c in sorted(classes):
+        print("   - "+c)
+
+    return (np.array(X_train), np.array(y_train), np.array(X_test), np.array(y_test), len(classes))
