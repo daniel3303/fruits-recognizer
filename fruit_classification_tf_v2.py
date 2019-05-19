@@ -42,8 +42,11 @@ def main():
             momentum=0.90
         )
 
-    nn.train(X_train, y_train, X_test, y_test, batchSize=12, epochs=6)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=6)
     nn.close()
+
+    print(cost)
+    print(accuracy)
 
 
 
