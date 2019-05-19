@@ -40,7 +40,6 @@ def main():
         momentum=0.90
     )
     cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
-    nn.close()
 
     # 6X6 filters
     nn = CNN(
@@ -57,7 +56,6 @@ def main():
     )
 
     cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
-    nn.close()
 
     # 12x12 filters
     nn = CNN(
@@ -74,10 +72,7 @@ def main():
     )
 
     cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
-    nn.close()
 
-    print(cost)
-    print(accuracy)
 
 
 if __name__ == '__main__':
