@@ -35,11 +35,10 @@ def main():
         outputSize=4,
         filters=[(3, 3, 3, 20), (3, 3, 20, 50)],
         poolSize=(2, 2),
-        learningRate=0.0001,
-        decay=0.99,
-        momentum=0.90
+        initialization="xavier_glorot",
+        regularization="dropout"
     )
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
 
     # 6X6 filters
     nn = CNN(
@@ -50,12 +49,11 @@ def main():
         outputSize=4,
         filters=[(6, 6, 3, 20), (6, 6, 20, 50)],
         poolSize=(2, 2),
-        learningRate=0.0001,
-        decay=0.99,
-        momentum=0.90
+        initialization="zeros",
+        regularization="l1"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
 
     # 12x12 filters
     nn = CNN(
@@ -66,12 +64,11 @@ def main():
         outputSize=4,
         filters=[(12, 12, 3, 20), (12, 12, 20, 50)],
         poolSize=(2, 2),
-        learningRate=0.0001,
-        decay=0.99,
-        momentum=0.90
+        initialization="random_normal",
+        regularization="l2"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
 
 
 

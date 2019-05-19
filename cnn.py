@@ -1,5 +1,9 @@
 import tensorflow as tf
 import numpy as np
+import os
+
+# hides deprecations warnings about using contrib package for l1 regularization
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 class CNN:
@@ -26,8 +30,22 @@ class CNN:
             - RMSProp decay. How much to decay the current momentum
         momentum:
             - the momentum
+        initialization:
+            - How the neural networks weights are initialized. Note that the bias is always initialized to zero.
+            - Available options:
+                - xavier_glorot     | (default) original paper: http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf
+                - zeros             | matrix of zeros
+                - random_normal     | sample from a Guassian with mean 0 and deviation 1
+        regularization:
+            - Available options:
+                - None              | (default)
+                - dropout
+                - l1
+                - l2
     """
-    def __init__(self, name, imageWidth, imageHeight, hiddenSize, outputSize, filters=None, poolSize=(2, 2), learningRate = 0.0001, decay=0.99, momentum=0.9):
+    def __init__(self, name, imageWidth, imageHeight, hiddenSize, outputSize, filters=None, poolSize=(2, 2), learningRate = 0.0001, decay=0.99, momentum=0.9, initialization = "xavier_glorot", regularization = None):
+        self.regularization = regularization
+        self.initialization = initialization
         self.name = name
         self.momentum = momentum
         self.decay = decay
@@ -62,11 +80,9 @@ class CNN:
 
             # ann layers (we use just one hidden layer for simplicity, we can tweak the number of neurons in it)
             # in total we have 3 ann layers, the input layer, the hidden layer and the output layer
-            # vanilla ANN weights, the weights are initialized according to the Xavier/Glorot's initialization method
-            # original paper: http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf
-            Wh_init = np.random.randn(self.annInputSize, self.annHiddenSize) / np.sqrt(self.annInputSize + self.annHiddenSize)
+            Wh_init = self.init_weight(self.annInputSize, self.annHiddenSize)
             bh_init = np.zeros(self.annHiddenSize, dtype=np.float32)
-            Wo_init = np.random.randn(self.annHiddenSize, self.annOutputSize) / np.sqrt(self.annHiddenSize + self.annOutputSize)
+            Wo_init = self.init_weight(self.annHiddenSize, self.annOutputSize)
             bo_init = np.zeros(self.annOutputSize, dtype=np.float32)
 
             Wh = tf.Variable(Wh_init.astype(np.float32), name="hidden_weights")
@@ -79,16 +95,30 @@ class CNN:
 
             Zr = tf.reshape(Z_last, [-1, np.prod(Z_last_shape[1:])])
             Zh = tf.nn.relu(tf.matmul(Zr, Wh) + bh)
+
+            if self.regularization == "dropout":
+                Zh = tf.layers.dropout(inputs=Zh, rate=0.4)
+
             self.Yish = tf.matmul(Zh, Wo) + bo
 
 
             # cost function
+            loss = 0.0
+            if self.regularization == "l2":
+                vars = tf.trainable_variables(scope=self.name)
+                loss = tf.add_n([tf.nn.l2_loss(v) for v in vars if 'bias' not in v.name]) * 0.001
+            elif self.regularization == "l1":
+                l1reg = tf.contrib.layers.l1_regularizer(scale=0.005, scope=None)
+                vars = tf.trainable_variables(scope=self.name)  # all vars of your graph
+                loss = tf.contrib.layers.apply_regularization(l1reg, vars)
+
+
             self.cost = tf.reduce_sum(
                 tf.nn.softmax_cross_entropy_with_logits_v2(
                     logits=self.Yish,
                     labels=self.T
                 )
-            )
+            ) + loss
 
             # train operation
             self.trainOp = tf.train.RMSPropOptimizer(learning_rate=self.learningRate, decay=self.decay, momentum=self.momentum).minimize(self.cost)
@@ -100,6 +130,15 @@ class CNN:
         init = tf.global_variables_initializer()
 
         self.session.run(init)
+
+    def init_weight(self, *shape):
+        if self.initialization == "zeros":
+            w = np.zeros(shape)
+        elif self.initialization == "random_normal":
+            w = np.random.randn(*shape)
+        else: # default xavier_glorot
+            w = np.random.randn(*shape) / np.sqrt(np.sum(shape))
+        return w.astype(np.float32)
 
     def train(self, X_train, y_train, X_test, y_test, batchSize = 128, epochs = 5):
         N = len(X_train)
@@ -149,7 +188,8 @@ class CNN:
 
 
 class ConvolutionalLayer:
-    def __init__(self, X, filter, poolSize):
+    def __init__(self, X, filter, poolSize, initialization = None):
+        self.initialization = initialization
         self.X = X
         self.Z = None
         self.poolSize = poolSize
@@ -171,7 +211,12 @@ class ConvolutionalLayer:
         return tf.nn.relu(pool_out)
 
     def initFilter(self, shape):
-        w = np.random.randn(*shape) * np.sqrt(2.0 / np.prod(shape[:-1]))
+        if self.initialization == "zeros":
+            w = np.zeros(shape)
+        elif self.initialization == "random_normal":
+            w = np.random.randn(*shape)
+        else: # default xavier_glorot
+            w = np.random.randn(*shape) * np.sqrt(2.0 / np.prod(shape[:-1]))
         return w.astype(np.float32)
 
     def createConvLayer(self):
@@ -183,5 +228,4 @@ class ConvolutionalLayer:
         self.b = tf.Variable(b_init.astype(np.float32))
 
         self.Z = self.convPool(self.X, self.W, self.b)
-
 
