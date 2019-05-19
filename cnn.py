@@ -101,7 +101,7 @@ class CNN:
 
         self.session.run(init)
 
-    def train(self, X_train, y_train, X_test, y_test, batchSize = 128, epochs = 6):
+    def train(self, X_train, y_train, X_test, y_test, batchSize = 128, epochs = 5):
         N = len(X_train)
         n_batches = N//batchSize
 
@@ -127,7 +127,7 @@ class CNN:
                 Xbatch = X_test[k * batchSize:(k + 1) * batchSize, ]
                 Ybatch = y_test[k * batchSize:(k + 1) * batchSize, ]
 
-                prediction = self.session.run(self.predictOp, feed_dict={self.X: Xbatch, self.T: Ybatch})
+                prediction = self.session.run(self.predictOp, feed_dict={self.X: Xbatch})
                 testSucc += np.sum(prediction == np.argmax(Ybatch))
                 testAcc = testSucc / len(y_test)
 
@@ -137,8 +137,16 @@ class CNN:
 
         return (error, accuracy)
 
+    def predict(self, X):
+        return self.session.run(self.predictOp, feed_dict={self.X: X})
+
+    def predictOne(self, X):
+        return self.session.run(self.predictOp, feed_dict={self.X: np.array([X])})[0]
+
+
     def close(self):
         self.session.close()
+
 
 class ConvolutionalLayer:
     def __init__(self, X, filter, poolSize):

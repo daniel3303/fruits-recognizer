@@ -28,25 +28,22 @@ def main():
 
 
 
-    # Convolutional neural network using 2 filters, (2,2) pooling and 256 nodes in the hidden layer
+    # Convolutional neural network using 2 filters
     nn = CNN(
             name="test",
             imageWidth=100,
             imageHeight=100,
             hiddenSize=256,
             outputSize=4,
-            filters=[(5, 5, 3, 20), (5, 5, 20, 50)],
+            filters=[(50, 50, 3, 20), (25, 25, 20, 50)],
             poolSize=(2,2),
             learningRate=0.0001,
             decay=0.99,
             momentum=0.90
         )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=6)
+    nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=6)
     nn.close()
-
-    print(cost)
-    print(accuracy)
 
 
 
