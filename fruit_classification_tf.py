@@ -61,7 +61,6 @@ def main():
     # initial weights
     M = 256
     K = N_class
-    poolsz = (2, 2)
 
     W1_shape = (5, 5, 3, 20)  # (filter_width, filter_height, num_color_channels, num_feature_maps)
     W1_init = init_filter(W1_shape)
