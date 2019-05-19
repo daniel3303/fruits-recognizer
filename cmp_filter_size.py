@@ -38,7 +38,7 @@ def main():
         initialization="xavier_glorot",
         regularization="dropout"
     )
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
 
     # 6X6 filters
     nn = CNN(
@@ -53,7 +53,7 @@ def main():
         regularization="l1"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
 
     # 12x12 filters
     nn = CNN(
@@ -68,7 +68,7 @@ def main():
         regularization="l2"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
+    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
 
 
 
