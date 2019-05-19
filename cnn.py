@@ -1,10 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import os
-
-# hides deprecations warnings about using contrib package for l1 regularization
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 
 class CNN:
     """
