@@ -135,7 +135,7 @@ class CNN:
             w = np.random.randn(*shape) / np.sqrt(np.sum(shape))
         return w.astype(np.float32)
 
-    def train(self, X_train, y_train, X_test, y_test, batchSize = 128, epochs = 5):
+    def train(self, X_train, y_train, X_validation, y_validation, batchSize = 128, epochs = 5):
         N = len(X_train)
         n_batches = N//batchSize
 
@@ -155,25 +155,25 @@ class CNN:
                 epochErr += self.session.run(self.cost, feed_dict={self.X: Xbatch, self.T: Ybatch})
 
             # after one epoch calculates the accuracy
-            testSucc = 0
-            testAcc = 0
-            for k in range(0, len(y_test) // batchSize):
-                Xbatch = X_test[k * batchSize:(k + 1) * batchSize, ]
-                Ybatch = y_test[k * batchSize:(k + 1) * batchSize, ]
+            valSucc = 0
+            valAcc = 0
+            for k in range(0, len(y_validation) // batchSize):
+                Xbatch = X_validation[k * batchSize:(k + 1) * batchSize, ]
+                Ybatch = y_validation[k * batchSize:(k + 1) * batchSize, ]
 
                 prediction = self.session.run(self.predictOp, feed_dict={self.X: Xbatch})
-                testSucc += np.sum(prediction == np.argmax(Ybatch))
-                testAcc = testSucc / len(y_test)
+                valSucc += np.sum(prediction == np.argmax(Ybatch))
+                valAcc = valSucc / len(y_validation)
 
             error.append(epochErr)
-            accuracy.append(testAcc)
-            print(" | Epoch error: {0:.0f}".format(epochErr) + " | Accuracy: {0:.2f}".format(testAcc))
+            accuracy.append(valAcc)
+            print(" | Epoch error: {0:.0f}".format(epochErr) + " | Accuracy: {0:.2f}".format(valAcc))
 
         return (error, accuracy)
 
     def predict(self, X):
         return self.session.run(self.predictOp, feed_dict={self.X: X})
-
+    
     def predictOne(self, X):
         return self.session.run(self.predictOp, feed_dict={self.X: np.array([X])})[0]
 

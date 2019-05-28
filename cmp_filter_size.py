@@ -3,6 +3,7 @@ from __future__ import print_function, division
 import numpy as np
 
 from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
 from cnn import CNN
@@ -22,7 +23,7 @@ def main():
     y_train = encoder.fit_transform(y_train.reshape(-1, 1)).toarray()
     y_test = encoder.transform(y_test.reshape(-1, 1)).toarray()
     X_train = normalize(X_train)
-    X_train, y_train = shuffle(X_train, y_train)
+    X_train, X_validation, y_train, y_validation = train_test_split(X_train, y_train, test_size=0.20, random_state=42,shuffle=True)
     X_test = normalize(X_test)
 
     """ IN THIS SECTION WE COMPARE DIFFENT FILTER SIZES """
@@ -38,7 +39,7 @@ def main():
         initialization="xavier_glorot",
         regularization="dropout"
     )
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_validation, y_validation, batchSize=128, epochs=10)
 
     # 6X6 filters
     nn = CNN(
@@ -53,7 +54,7 @@ def main():
         regularization="l1"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_validation, y_validation, batchSize=128, epochs=10)
 
     # 12x12 filters
     nn = CNN(
@@ -68,7 +69,7 @@ def main():
         regularization="l2"
     )
 
-    cost, accuracy = nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=5)
+    cost, accuracy = nn.train(X_train, y_train, X_validation, y_validation, batchSize=128, epochs=10)
 
 
 
