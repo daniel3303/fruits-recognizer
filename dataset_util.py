@@ -8,7 +8,9 @@ def list_files(baseDir):
     return [dir[0]+"/"+file for dir in os.walk(baseDir) for file in dir[2] if os.path.isfile(dir[0]+"/"+file) and file.endswith(".jpg")]
 
 def load_image(path):
-    return cv2.imread(path)
+    bgr_img = cv2.imread(path)
+    b,g,r = cv2.split(bgr_img)       # get b,g,r
+    return cv2.merge([r,g,b]) 
 
 
 # Returns X_train, y_train, X_test, y_test
