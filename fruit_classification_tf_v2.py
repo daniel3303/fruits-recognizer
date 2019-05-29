@@ -26,7 +26,7 @@ def main():
     X_train = normalize(X_train)
     X_train, y_train = shuffle(X_train, y_train)
     X_test = normalize(X_test)
-    #X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.20, random_state=42,shuffle=True)
+    X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.050, random_state=1128,shuffle=True)
 
 
     # Convolutional neural network using 2 filters
@@ -43,16 +43,19 @@ def main():
             momentum=0.90
         )
 
-    nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
-    
+    nn.train(X_train, y_train, X_validation, y_validation, batchSize=128, epochs=2)
+    count=0
     for i in range(len(X_test)):
+        
         j = nn.predictOne(X_test[i])
         p = np.zeros(N_class)
         p[j] = 1
         if j!=np.argmax(y_test[i]):
+            count += 1
             plt.imshow(X_test[i])
             plt.show()
             print(encoder.inverse_transform([p]),':',encoder.inverse_transform([y_test[i]]))
+    print((len(X_test)-count)/len(X_test))
     
     nn.close()
 

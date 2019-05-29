@@ -163,7 +163,9 @@ class CNN:
 
                 prediction = self.session.run(self.predictOp, feed_dict={self.X: Xbatch})
                 valSucc += np.sum(prediction == np.argmax(Ybatch))
-                valAcc = valSucc / len(y_validation)
+            print(valSucc)
+            valAcc = valSucc / len(y_validation)
+            print(len(y_validation))
 
             error.append(epochErr)
             accuracy.append(valAcc)
