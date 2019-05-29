@@ -26,7 +26,7 @@ def main():
     X_train = normalize(X_train)
     X_train, y_train = shuffle(X_train, y_train)
     X_test = normalize(X_test)
-    X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.050, random_state=1128,shuffle=True)
+    X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.50, random_state=0)
 
 
     # Convolutional neural network using 2 filters

@@ -156,16 +156,14 @@ class CNN:
 
             # after one epoch calculates the accuracy
             valSucc = 0
-            valAcc = 0
-            for k in range(0, len(y_validation) // batchSize):
-                Xbatch = X_validation[k * batchSize:(k + 1) * batchSize, ]
-                Ybatch = y_validation[k * batchSize:(k + 1) * batchSize, ]
+            for i in range(len(y_validation)):
+                j = self.predictOne(X_validation[i])
+                p = np.zeros(X_validation.shape[1])
+                p[j] = 1
+                if j == np.argmax(y_validation[i]):
+                    valSucc += 1
 
-                prediction = self.session.run(self.predictOp, feed_dict={self.X: Xbatch})
-                valSucc += np.sum(prediction == np.argmax(Ybatch))
-            print(valSucc)
             valAcc = valSucc / len(y_validation)
-            print(len(y_validation))
 
             error.append(epochErr)
             accuracy.append(valAcc)
