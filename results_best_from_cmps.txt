@@ -1,0 +1,31 @@
+Loading train data...
+10805 images found.
+Loading test data...
+3614 images found.
+Classes found: 
+   - Apple
+   - Lemon
+   - Orange
+   - Pear
+   
+Epoch 1 of 9 | Training batch 84 of 84 | Epoch error: 3921 | Accuracy: 0.98
+Epoch 2 of 9 | Training batch 84 of 84 | Epoch error: 423 | Accuracy: 0.98
+Epoch 3 of 9 | Training batch 84 of 84 | Epoch error: 318 | Accuracy: 0.98
+Epoch 4 of 9 | Training batch 84 of 84 | Epoch error: 48 | Accuracy: 0.99
+Epoch 5 of 9 | Training batch 84 of 84 | Epoch error: 22 | Accuracy: 0.99
+Epoch 6 of 9 | Training batch 84 of 84 | Epoch error: 20 | Accuracy: 0.99
+Epoch 7 of 9 | Training batch 84 of 84 | Epoch error: 19 | Accuracy: 0.99
+Epoch 8 of 9 | Training batch 84 of 84 | Epoch error: 18 | Accuracy: 0.99
+Epoch 9 of 9 | Training batch 84 of 84 | Epoch error: 18 | Accuracy: 0.99
+
+0 : [['Apple']]
+1 : [['Lemon']]
+2 : [['Orange']]
+3 : [['Pear']]
+Test phase
+mistakes
+[[ 0  0  0  1]
+ [ 0  0  0  0]
+ [ 0  0  0  0]
+ [38  0  0  0]]
+Test accuracy: 0.9784172661870504
