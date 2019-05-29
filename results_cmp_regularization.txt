@@ -1,0 +1,131 @@
+Loading train data...
+10805 images found.
+Loading test data...
+3614 images found.
+Classes found: 
+   - Apple
+   - Lemon
+   - Orange
+   - Pear
+
+Epoch 1 of 20 | Training batch 84 of 84 | Epoch error: 7272 | Accuracy: 0.93
+Epoch 2 of 20 | Training batch 84 of 84 | Epoch error: 891 | Accuracy: 0.98
+Epoch 3 of 20 | Training batch 84 of 84 | Epoch error: 356 | Accuracy: 0.98
+Epoch 4 of 20 | Training batch 84 of 84 | Epoch error: 152 | Accuracy: 0.98
+Epoch 5 of 20 | Training batch 84 of 84 | Epoch error: 73 | Accuracy: 0.99
+Epoch 6 of 20 | Training batch 84 of 84 | Epoch error: 27 | Accuracy: 0.99
+Epoch 7 of 20 | Training batch 84 of 84 | Epoch error: 9 | Accuracy: 0.99
+Epoch 8 of 20 | Training batch 84 of 84 | Epoch error: 4 | Accuracy: 0.99
+Epoch 9 of 20 | Training batch 84 of 84 | Epoch error: 2 | Accuracy: 0.99
+Epoch 10 of 20 | Training batch 84 of 84 | Epoch error: 1 | Accuracy: 0.99
+Epoch 11 of 20 | Training batch 84 of 84 | Epoch error: 1 | Accuracy: 0.99
+Epoch 12 of 20 | Training batch 84 of 84 | Epoch error: 1 | Accuracy: 0.99
+Epoch 13 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 14 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 15 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 16 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 17 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 18 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 19 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 20 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+
+Epoch 1 of 20 | Training batch 84 of 84 | Epoch error: 12686 | Accuracy: 0.93
+Epoch 2 of 20 | Training batch 84 of 84 | Epoch error: 1039 | Accuracy: 0.96
+Epoch 3 of 20 | Training batch 84 of 84 | Epoch error: 471 | Accuracy: 0.96
+Epoch 4 of 20 | Training batch 84 of 84 | Epoch error: 235 | Accuracy: 0.96
+Epoch 5 of 20 | Training batch 84 of 84 | Epoch error: 131 | Accuracy: 0.96
+Epoch 6 of 20 | Training batch 84 of 84 | Epoch error: 45 | Accuracy: 0.99
+Epoch 7 of 20 | Training batch 84 of 84 | Epoch error: 13 | Accuracy: 0.99
+Epoch 8 of 20 | Training batch 84 of 84 | Epoch error: 7 | Accuracy: 0.99
+Epoch 9 of 20 | Training batch 84 of 84 | Epoch error: 4 | Accuracy: 0.99
+Epoch 10 of 20 | Training batch 84 of 84 | Epoch error: 2 | Accuracy: 0.99
+Epoch 11 of 20 | Training batch 84 of 84 | Epoch error: 1 | Accuracy: 0.99
+Epoch 12 of 20 | Training batch 84 of 84 | Epoch error: 1 | Accuracy: 0.99
+Epoch 13 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 14 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 15 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 16 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 17 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 18 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 19 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+Epoch 20 of 20 | Training batch 84 of 84 | Epoch error: 0 | Accuracy: 0.99
+
+Epoch 1 of 20 | Training batch 84 of 84 | Epoch error: 24023 | Accuracy: 0.91
+Epoch 2 of 20 | Training batch 84 of 84 | Epoch error: 14885 | Accuracy: 0.96
+Epoch 3 of 20 | Training batch 84 of 84 | Epoch error: 11641 | Accuracy: 0.97
+Epoch 4 of 20 | Training batch 84 of 84 | Epoch error: 8297 | Accuracy: 0.98
+Epoch 5 of 20 | Training batch 84 of 84 | Epoch error: 4925 | Accuracy: 0.98
+Epoch 6 of 20 | Training batch 84 of 84 | Epoch error: 2354 | Accuracy: 0.98
+Epoch 7 of 20 | Training batch 84 of 84 | Epoch error: 1130 | Accuracy: 0.99
+Epoch 8 of 20 | Training batch 84 of 84 | Epoch error: 892 | Accuracy: 0.98
+Epoch 9 of 20 | Training batch 84 of 84 | Epoch error: 1907 | Accuracy: 0.99
+Epoch 10 of 20 | Training batch 84 of 84 | Epoch error: 1200 | Accuracy: 0.99
+Epoch 11 of 20 | Training batch 84 of 84 | Epoch error: 876 | Accuracy: 0.99
+Epoch 12 of 20 | Training batch 84 of 84 | Epoch error: 766 | Accuracy: 0.99
+Epoch 13 of 20 | Training batch 84 of 84 | Epoch error: 728 | Accuracy: 0.99
+Epoch 14 of 20 | Training batch 84 of 84 | Epoch error: 760 | Accuracy: 0.98
+Epoch 15 of 20 | Training batch 84 of 84 | Epoch error: 693 | Accuracy: 0.99
+Epoch 16 of 20 | Training batch 84 of 84 | Epoch error: 1183 | Accuracy: 0.99
+Epoch 17 of 20 | Training batch 84 of 84 | Epoch error: 765 | Accuracy: 0.99
+Epoch 18 of 20 | Training batch 84 of 84 | Epoch error: 673 | Accuracy: 0.99
+Epoch 19 of 20 | Training batch 84 of 84 | Epoch error: 647 | Accuracy: 0.97
+Epoch 20 of 20 | Training batch 84 of 84 | Epoch error: 1143 | Accuracy: 0.99
+
+Epoch 1 of 20 | Training batch 84 of 84 | Epoch error: 10283 | Accuracy: 0.92
+Epoch 2 of 20 | Training batch 84 of 84 | Epoch error: 1270 | Accuracy: 0.97
+Epoch 3 of 20 | Training batch 84 of 84 | Epoch error: 552 | Accuracy: 0.98
+Epoch 4 of 20 | Training batch 84 of 84 | Epoch error: 272 | Accuracy: 0.98
+Epoch 5 of 20 | Training batch 84 of 84 | Epoch error: 121 | Accuracy: 0.98
+Epoch 6 of 20 | Training batch 84 of 84 | Epoch error: 65 | Accuracy: 0.99
+Epoch 7 of 20 | Training batch 84 of 84 | Epoch error: 49 | Accuracy: 0.97
+Epoch 8 of 20 | Training batch 84 of 84 | Epoch error: 110 | Accuracy: 0.99
+Epoch 9 of 20 | Training batch 84 of 84 | Epoch error: 23 | Accuracy: 0.99
+Epoch 10 of 20 | Training batch 84 of 84 | Epoch error: 21 | Accuracy: 0.99
+Epoch 11 of 20 | Training batch 84 of 84 | Epoch error: 20 | Accuracy: 0.99
+Epoch 12 of 20 | Training batch 84 of 84 | Epoch error: 20 | Accuracy: 0.99
+Epoch 13 of 20 | Training batch 84 of 84 | Epoch error: 19 | Accuracy: 0.99
+Epoch 14 of 20 | Training batch 84 of 84 | Epoch error: 19 | Accuracy: 0.99
+Epoch 15 of 20 | Training batch 84 of 84 | Epoch error: 18 | Accuracy: 0.99
+Epoch 16 of 20 | Training batch 84 of 84 | Epoch error: 17 | Accuracy: 0.99
+Epoch 17 of 20 | Training batch 84 of 84 | Epoch error: 15 | Accuracy: 0.99
+Epoch 18 of 20 | Training batch 84 of 84 | Epoch error: 127 | Accuracy: 0.99
+Epoch 19 of 20 | Training batch 84 of 84 | Epoch error: 17 | Accuracy: 0.99
+Epoch 20 of 20 | Training batch 84 of 84 | Epoch error: 14 | Accuracy: 0.99
+
+0 : [['Apple']]
+1 : [['Lemon']]
+2 : [['Orange']]
+3 : [['Pear']]
+Test phase
+------
+None:
+mistakes
+[[ 0  0  0  6]
+ [ 0  0  0  0]
+ [ 0  0  0  0]
+ [41  0  0  0]]
+Test accuracy: 0.9739900387382402
+------
+dropout:
+mistakes
+[[ 0  0  0  8]
+ [ 0  0  0  0]
+ [ 0  0  0  0]
+ [39  0  0  0]]
+Test accuracy: 0.9739900387382402
+------
+l1:
+mistakes
+[[ 0  0  0  3]
+ [ 0  0  0  0]
+ [ 0  0  0  0]
+ [40  0  0  0]]
+Test accuracy: 0.9762036524626453
+------
+l2:
+mistakes
+[[ 0  0  0  4]
+ [ 0  0  0  0]
+ [ 0  0  0  0]
+ [38  0  0  0]]
+Test accuracy: 0.9767570558937465
