@@ -3,7 +3,7 @@ from builtins import range
 
 import numpy as np
 import tensorflow as tf
-
+from matplotlib import pyplot as plt
 from datetime import datetime
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
@@ -26,7 +26,7 @@ def main():
     X_train = normalize(X_train)
     X_train, y_train = shuffle(X_train, y_train)
     X_test = normalize(X_test)
-    X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.20, random_state=42,shuffle=True)
+    #X_test, X_validation, y_test, y_validation = train_test_split(X_test, y_test, test_size=0.20, random_state=42,shuffle=True)
 
 
     # Convolutional neural network using 2 filters
@@ -43,13 +43,15 @@ def main():
             momentum=0.90
         )
 
-    nn.train(X_train, y_train, X_validation, y_validation, batchSize=128, epochs=10)
+    nn.train(X_train, y_train, X_test, y_test, batchSize=128, epochs=1)
     
     for i in range(len(X_test)):
         j = nn.predictOne(X_test[i])
         p = np.zeros(N_class)
         p[j] = 1
         if j!=np.argmax(y_test[i]):
+            plt.imshow(X_test[i])
+            plt.show()
             print(encoder.inverse_transform([p]),':',encoder.inverse_transform([y_test[i]]))
     
     nn.close()
