@@ -3,8 +3,11 @@ Deep Learning Fruits Recognizer
 
 ## Comparisons
 Run cmp_filter_size to compare different filter sizes
+
 Run cmp_initialization to compare different initialization
+
 Run cmp_regularization to compare different regularization
+
 
 ## Final Parameters
 Run the file fruit_classification_best_from_cmps for the best combination.
